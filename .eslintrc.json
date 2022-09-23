@@ -19,6 +19,7 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "no-useless-return": "off",
     "object-curly-newline": "warn",
     "arrow-body-style": "warn",
     "space-infix-ops": "warn",
