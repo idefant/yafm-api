@@ -1,12 +1,16 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
 
 import UserController from '../controllers/UserController';
+import { body } from '../middlewares/checkRequestMiddleware';
+import {
+  changePasswordSchema, loginUserSchema, refreshTokenSchema, signupUserSchema,
+} from '../schema/userSchema';
 
 const router = Router();
 
-router.post('/signup', express.json(), UserController.signup);
-router.post('/login', express.json(), UserController.login);
-router.put('/change_password', express.json(), UserController.changePassword);
-router.put('/refresh_token', express.json(), UserController.refreshToken);
+router.post('/signup', body(signupUserSchema), UserController.signup);
+router.post('/login', body(loginUserSchema), UserController.login);
+router.put('/change_password', body(changePasswordSchema), UserController.changePassword);
+router.put('/refresh_token', body(refreshTokenSchema), UserController.refreshToken);
 
 export default router;

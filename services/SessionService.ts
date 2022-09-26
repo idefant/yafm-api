@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
-import { object, string } from 'yup';
 
 import HttpException from '../models/HttpException';
 import prisma from '../prisma/prisma-client';
@@ -33,6 +32,14 @@ class SessionService {
     return { refreshToken, accessToken };
   }
 
+  static checkAccessToken(token: string) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET || '');
+    } catch (error) {
+      throw new HttpException(401, 'Unauthorized');
+    }
+  }
+
   static getExpirationDate() {
     return dayjs().add(90, 'days').toISOString();
   }
@@ -53,14 +60,6 @@ class SessionService {
   }
 
   static async refreshToken(data: { refresh_token: string }) {
-    const schema = object().shape({
-      refresh_token: string().uuid().required(),
-    });
-
-    if (!await schema.isValid(data)) {
-      throw new HttpException(500, 'Wrong params');
-    }
-
     const session = await SessionService.findByToken(data.refresh_token);
     if (!session) {
       throw new HttpException(401, 'Unauthorized');

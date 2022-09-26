@@ -1,9 +1,12 @@
 class HttpException extends Error {
   errorCode: number;
 
-  constructor(errorCode: number, public readonly message: string) {
+  debugMessage: string;
+
+  constructor(errorCode: number, public readonly message = '', debugMessage = '') {
     super(message);
     this.errorCode = errorCode;
+    this.debugMessage = debugMessage;
   }
 }
 
