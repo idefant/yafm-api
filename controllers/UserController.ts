@@ -33,7 +33,7 @@ class UserController {
 
   static async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await SessionService.refreshToken(req.body);
+      const result = await SessionService.refreshToken(req.body, req.headers['user-agent']);
       res.send(result);
     } catch (error) {
       next(error);

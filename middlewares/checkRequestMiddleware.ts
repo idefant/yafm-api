@@ -14,7 +14,7 @@ const checkSchemaMiddleware = (data: keyof Request) => (
           new HttpException(
             500,
             'Wrong request parameters',
-            error instanceof ValidationError ? error.message : '',
+            error instanceof ValidationError ? error.message : undefined,
           ),
         );
       }

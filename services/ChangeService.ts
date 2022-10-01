@@ -1,37 +1,23 @@
-import prisma from '../prisma/prisma-client';
+import { TUserDocument } from '../models/User';
 
 class ChangeService {
-  static getList(userId: string) {
-    return prisma.change.findMany({
-      where: {
-        user_id: {
-          equals: userId,
-        },
-      },
-    });
+  static async getList(user: TUserDocument) {
+    return user.changes;
   }
 
-  static async create(userId: string, data: { cipher: string; iv: string }) {
-    await prisma.change.create({
-      data: {
-        cipher: data.cipher,
-        iv: data.iv,
-        user_id: userId,
-      },
+  static async create(user: TUserDocument, data: { cipher: string; iv: string }) {
+    user.changes.push({
+      cipher: data.cipher,
+      iv: data.iv,
     });
+    user.save();
   }
 
-  static async deleteList(userId: string, changeIds: string[]) {
-    await prisma.change.deleteMany({
-      where: {
-        user_id: {
-          equals: userId,
-        },
-        id: {
-          in: changeIds,
-        },
-      },
+  static async deleteList(user: TUserDocument, changeIds: string[]) {
+    changeIds.forEach((changeId) => {
+      user.changes.id(changeId)?.remove();
     });
+    user.save();
   }
 }
 

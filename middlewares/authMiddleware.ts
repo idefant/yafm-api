@@ -1,24 +1,35 @@
 import { NextFunction, Request, Response } from 'express';
 
 import HttpException from '../models/HttpException';
-import SessionService from '../services/SessionService';
+import User from '../models/User';
+import { checkAccessToken } from '../utils/authUtil';
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {
     next(new HttpException(401, 'Unauthorized'));
     return;
   }
 
-  const token = req.headers.authorization.split(' ')[1];
-  const tokenPayload = SessionService.checkAccessToken(token);
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const tokenPayload = checkAccessToken(token);
 
-  if (typeof tokenPayload === 'string') {
-    next(new HttpException(500));
-    return;
+    if (typeof tokenPayload === 'string') {
+      next(new HttpException(401, 'Unauthorized'));
+      return;
+    }
+
+    const user = await User.findById(tokenPayload.user_id);
+    if (!user) {
+      next(new HttpException(401, 'Unauthorized'));
+      return;
+    }
+
+    res.locals.user = user;
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  res.locals.userId = tokenPayload.user_id;
-  next();
 };
 
 export default authMiddleware;
