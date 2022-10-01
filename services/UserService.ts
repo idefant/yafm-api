@@ -43,6 +43,7 @@ class UserService {
     }
 
     await user.update({ password_hash: hashPassword(data.new_password) });
+    await SessionService.clearSessions(user);
   }
 }
 

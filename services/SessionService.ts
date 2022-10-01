@@ -53,6 +53,11 @@ class SessionService {
       access_token: tokens.accessToken,
     };
   }
+
+  static async clearSessions(user: TUserDocument) {
+    await Session.deleteMany({ user: user.id });
+    await user.updateOne({ sessions: [] });
+  }
 }
 
 export default SessionService;
