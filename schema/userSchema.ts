@@ -1,11 +1,10 @@
 import { object, string } from 'yup';
 
-import { usernameSchema, passwordSchema, hexSchema } from './commonSchema';
+import { usernameSchema, passwordSchema } from './commonSchema';
 
 export const signupUserSchema = object().shape({
   username: usernameSchema.required(),
   password: passwordSchema.required(),
-  salt: hexSchema.required(),
 });
 
 export const loginUserSchema = object().shape({

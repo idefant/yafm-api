@@ -6,8 +6,8 @@ import UserService from '../services/UserService';
 class UserController {
   static async signup(req: Request, res: Response, next: NextFunction) {
     try {
-      await UserService.signup(req.body);
-      res.sendStatus(201);
+      const result = await UserService.signup(req.body, req.headers['user-agent']);
+      res.status(201).send(result);
     } catch (error) {
       next(error);
     }
@@ -24,8 +24,8 @@ class UserController {
 
   static async changePassword(req: Request, res: Response, next: NextFunction) {
     try {
-      await UserService.changePassword(req.body);
-      res.sendStatus(200);
+      const result = await UserService.changePassword(req.body, req.headers['user-agent']);
+      res.send(result);
     } catch (error) {
       next(error);
     }
@@ -34,6 +34,24 @@ class UserController {
   static async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await SessionService.refreshToken(req.body, req.headers['user-agent']);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getInfo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await UserService.getInfo(res.locals.user);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await UserService.delete(res.locals.user);
       res.send(result);
     } catch (error) {
       next(error);

@@ -1,33 +1,29 @@
-import { randomUUID } from 'crypto';
+import { User } from '@prisma/client';
 
-import { TUserDocument } from '../models/User';
-
-import ChangeService from './ChangeService';
+import prisma from '../prisma';
 
 interface SetBaseBodyProps {
   iv: string;
   cipher: string;
-  change_ids: string[];
+  hmac: string;
 }
 
 class BaseService {
-  static async get(user: TUserDocument) {
-    return user.base;
+  static async get(user: User) {
+    return prisma.base.findFirst({ where: { userId: user.id } });
   }
 
-  static async create(user: TUserDocument, data: SetBaseBodyProps) {
-    await ChangeService.deleteList(user, data.change_ids);
-
-    const baseId = randomUUID();
-    await user.updateOne({
-      base: {
-        _id: baseId,
+  static async create(user: User, data: SetBaseBodyProps) {
+    const base = await prisma.base.create({
+      data: {
         iv: data.iv,
         cipher: data.cipher,
+        hmac: data.hmac,
+        userId: user.id,
       },
     });
 
-    return baseId;
+    return base.id;
   }
 }
 

@@ -1,8 +1,8 @@
+import { User } from '@prisma/client';
 import dayjs from 'dayjs';
 
 import HttpException from '../models/HttpException';
-import Session from '../models/Session';
-import { TUserDocument } from '../models/User';
+import prisma from '../prisma';
 import { generateTokens, getExpirationDate } from '../utils/authUtil';
 
 interface RefreshTokenBodyProps {
@@ -11,25 +11,24 @@ interface RefreshTokenBodyProps {
 
 class SessionService {
   static async findByToken(token: string) {
-    const session = await Session.findOne({ refresh_token: token });
-    if (!session || dayjs(session.expires_at).isBefore(dayjs())) {
+    const session = await prisma.session.findUnique({ where: { refreshToken: token } });
+    if (!session || dayjs(session.expiresAt).isBefore(dayjs())) {
       return null;
     }
     return session;
   }
 
-  static async create(user: TUserDocument, userAgent?: string) {
+  static async create(user: User, userAgent?: string) {
     const tokens = generateTokens(user.id);
 
-    const session = await Session.create({
-      refresh_token: tokens.refreshToken,
-      user_agent: userAgent,
-      user: user.id,
-      expires_at: getExpirationDate(),
+    await prisma.session.create({
+      data: {
+        refreshToken: tokens.refreshToken,
+        userAgent,
+        userId: user.id,
+        expiresAt: getExpirationDate(),
+      },
     });
-
-    user.sessions.push(session.id);
-    user.save();
 
     return tokens;
   }
@@ -39,13 +38,15 @@ class SessionService {
     if (!session) {
       throw new HttpException(401, 'Unauthorized');
     }
+    const tokens = generateTokens(session.userId);
 
-    const tokens = generateTokens(session.user);
-
-    await session.updateOne({
-      refresh_token: tokens.refreshToken,
-      user_agent: userAgent,
-      expires_at: getExpirationDate(),
+    await prisma.session.update({
+      where: { refreshToken: data.refresh_token },
+      data: {
+        refreshToken: tokens.refreshToken,
+        userAgent,
+        expiresAt: getExpirationDate(),
+      },
     });
 
     return {
@@ -54,9 +55,8 @@ class SessionService {
     };
   }
 
-  static async clearSessions(user: TUserDocument) {
-    await Session.deleteMany({ user: user.id });
-    await user.updateOne({ sessions: [] });
+  static async clearSessions(user: User) {
+    await prisma.session.deleteMany({ where: { userId: user.id } });
   }
 }
 

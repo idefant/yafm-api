@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import HttpException from '../models/HttpException';
-import User from '../models/User';
+import prisma from '../prisma';
 import { checkAccessToken } from '../utils/authUtil';
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +19,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
       return;
     }
 
-    const user = await User.findById(tokenPayload.user_id);
+    const user = await prisma.user.findUnique({ where: { id: tokenPayload.user_id } });
     if (!user) {
       next(new HttpException(401, 'Unauthorized'));
       return;
