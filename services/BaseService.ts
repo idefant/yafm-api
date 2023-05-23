@@ -6,6 +6,7 @@ interface SetBaseBodyProps {
   iv: string;
   cipher: string;
   hmac: string;
+  salt: string;
 }
 
 class BaseService {
@@ -15,12 +16,7 @@ class BaseService {
 
   static async create(user: User, data: SetBaseBodyProps) {
     const base = await prisma.base.create({
-      data: {
-        iv: data.iv,
-        cipher: data.cipher,
-        hmac: data.hmac,
-        userId: user.id,
-      },
+      data: { ...data, userId: user.id },
     });
 
     return base.id;
