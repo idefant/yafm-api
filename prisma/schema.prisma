@@ -13,18 +13,22 @@ model User {
   passwordHash String    @map("password_hash")
   bases        Base[]
   sessions     Session[]
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Base {
-  id     String @id @default(uuid())
-  cipher String
-  iv     String
-  hmac   String
-  salt   String
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  id        String   @id @default(uuid())
+  cipher    String   @db.Text
+  iv        String
+  hmac      String
+  salt      String   @db.Text
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("bases")
 }
@@ -33,9 +37,11 @@ model Session {
   id           String   @id @default(uuid())
   refreshToken String   @unique @map("refresh_token")
   userAgent    String?  @map("user_agent")
-  expiresAt    DateTime @map("expires_at")
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String   @map("user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  expiresAt    DateTime @map("expires_at")
 
   @@map("sessions")
 }

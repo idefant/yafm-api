@@ -73,7 +73,11 @@ class UserService {
   static getInfo(user: User) {
     return prisma.user.findUnique({
       where: { id: user.id },
-      include: { sessions: { select: { userAgent: true } }, bases: true },
+      select: {
+        username: true,
+        sessions: { select: { userAgent: true } },
+        bases: { orderBy: { createdAt: 'desc' }, take: 10 },
+      },
     });
   }
 

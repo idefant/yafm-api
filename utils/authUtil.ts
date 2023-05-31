@@ -19,7 +19,7 @@ export const checkAccessToken = (token: string) => {
 export const generateTokens = (userId: string) => {
   const refreshToken = randomUUID();
   const accessToken = jwt.sign({ user_id: userId }, process.env.JWT_SECRET || '', {
-    expiresIn: 3600,
+    expiresIn: 3600 * 1000000,
   });
   return { refreshToken, accessToken };
 };

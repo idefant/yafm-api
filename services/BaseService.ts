@@ -19,7 +19,7 @@ class BaseService {
       data: { ...data, userId: user.id },
     });
 
-    return base.id;
+    return base;
   }
 }
 
