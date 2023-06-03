@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 
 RUN npm run db:gen
+RUN npm run db:push
 RUN npm run build
 
 CMD [ "npm", "start" ]
