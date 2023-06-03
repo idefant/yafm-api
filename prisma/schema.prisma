@@ -21,7 +21,7 @@ model User {
 
 model Base {
   id        String   @id @default(uuid())
-  cipher    String   @db.Text
+  cipher    String   @db.LongText
   iv        String
   hmac      String
   salt      String   @db.Text
