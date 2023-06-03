@@ -24,5 +24,6 @@ WORKDIR /usr/src/app
 
 COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
 COPY --from=builder --chown=node:node /usr/src/app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /usr/src/app/package.json ./package.json
 
 CMD [ "npm", "start" ]
