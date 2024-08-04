@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 
 import errorMiddleware from './middlewares/errorMiddleware';
+import { verifyJwtMiddleware } from './middlewares/verifyJwtMiddleware';
 import baseRouter from './routes/baseRouter';
-import userRouter from './routes/userRouter';
 
 dotenv.config();
 
@@ -17,7 +17,8 @@ app.use(express.urlencoded({ limit: '25mb', extended: true }));
 app.use(cors());
 app.use(express.json());
 
-app.use('/', userRouter);
+app.use(verifyJwtMiddleware);
+
 app.use('/base', baseRouter);
 
 app.use(errorMiddleware);
