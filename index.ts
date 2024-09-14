@@ -4,7 +4,7 @@ import express from 'express';
 
 import errorMiddleware from './middlewares/errorMiddleware';
 import { verifyJwtMiddleware } from './middlewares/verifyJwtMiddleware';
-import baseRouter from './routes/baseRouter';
+import commitRouter from './routes/commitRouter';
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(verifyJwtMiddleware);
 
-app.use('/base', baseRouter);
+app.use('/commit', commitRouter);
 
 app.use(errorMiddleware);
 

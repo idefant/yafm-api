@@ -7,15 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Base {
+model Commit {
   id        String   @id @default(uuid())
+  createdAt DateTime @map("created_at")
   cipher    String   @db.LongText
   iv        String
   hmac      String
   salt      String   @db.Text
   userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  syncedAt  DateTime @default(now()) @map("synced_at")
 
-  @@map("bases")
+  @@map("commits")
 }

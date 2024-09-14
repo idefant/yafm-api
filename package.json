@@ -10,7 +10,7 @@
     "lint": "eslint -c .eslintrc.json --ext .js,.ts .",
     "lint:fix": "npm run lint -- --fix",
     "db:gen": "prisma generate",
-    "db:push": "prisma db push "
+    "db:push": "prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
