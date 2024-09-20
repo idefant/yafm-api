@@ -2,7 +2,6 @@ import prisma from '../prisma';
 import { Token } from '../types/tokenType';
 
 interface SetCommitBodyProps {
-  createdAt: Date;
   iv: string;
   cipher: string;
   hmac: string;
@@ -18,7 +17,7 @@ class CommitService {
           gt: data.syncedAtFrom,
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { syncedAt: 'asc' },
     });
     return commits;
   }

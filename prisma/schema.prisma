@@ -8,14 +8,13 @@ datasource db {
 }
 
 model Commit {
-  id        String   @id @default(uuid())
-  createdAt DateTime @map("created_at")
-  cipher    String   @db.LongText
-  iv        String
-  hmac      String
-  salt      String   @db.Text
-  userId    String   @map("user_id")
-  syncedAt  DateTime @default(now()) @map("synced_at")
+  id       String   @id @default(uuid())
+  cipher   String   @db.LongText
+  iv       String
+  hmac     String
+  salt     String   @db.Text
+  userId   String   @map("user_id")
+  syncedAt DateTime @default(now()) @map("synced_at")
 
   @@map("commits")
 }

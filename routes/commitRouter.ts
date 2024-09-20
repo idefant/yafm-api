@@ -15,13 +15,18 @@ router.use(verifyJwtMiddleware);
  *   schemas:
  *     Commit:
  *       type: object
+ *       required:
+ *         - id
+ *         - cipher
+ *         - iv
+ *         - hmac
+ *         - salt
+ *         - userId
+ *         - syncedAt
  *       properties:
  *         id:
  *           type: string
  *           format: uuid
- *         createdAt:
- *           type: string
- *           format: date-time
  *         cipher:
  *           type: string
  *         iv:
@@ -39,10 +44,12 @@ router.use(verifyJwtMiddleware);
  *
  *     CreateCommit:
  *       type: object
+ *       required:
+ *         - cipher
+ *         - iv
+ *         - hmac
+ *         - salt
  *       properties:
- *         createdAt:
- *           type: string
- *           format: date-time
  *         cipher:
  *           type: string
  *         iv:
