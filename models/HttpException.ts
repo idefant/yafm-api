@@ -11,3 +11,14 @@ class HttpException extends Error {
 }
 
 export default HttpException;
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    HttpException:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ */
