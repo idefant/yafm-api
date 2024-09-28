@@ -12,6 +12,15 @@ class CommitController {
     }
   }
 
+  static async getActualList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await CommitService.getActualList(res.locals.token, req.query as any);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await CommitService.create(res.locals.token, req.body);

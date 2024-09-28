@@ -80,14 +80,41 @@ router.use(verifyJwtMiddleware);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Commit'
-  *       500:
+ *       500:
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/HttpException'
-
  */
 router.get('/', query(getListCommitsSchema), CommitController.getList);
+
+/**
+ * @openapi
+ * /commit/actual:
+ *   get:
+ *     tags:
+ *       - Commit
+ *     summary: Actual commit list
+ *     parameters:
+ *      - name: syncedAtFrom
+ *        in: query
+ *        format: date-time
+ *        example: 2017-07-21T17:32:28Z
+ *     responses:
+ *       200:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Commit'
+ *       500:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HttpException'
+ */
+router.get('/actual', query(getListCommitsSchema), CommitController.getActualList);
 
 /**
  * @openapi
