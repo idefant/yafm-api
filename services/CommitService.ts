@@ -67,6 +67,14 @@ class CommitService {
       throw new HttpException(400, 'Irrelevant data. The page needs to be reloaded');
     }
 
+    const commitWithSameHmac = await prisma.commit.findFirst({
+      where: { userId: token.sub, hmac: data.hmac },
+    });
+
+    if (commitWithSameHmac) {
+      return commitWithSameHmac;
+    }
+
     return prisma.commit.create({
       data: { ...data, userId: token.sub, is_unused_salt: false },
     });
